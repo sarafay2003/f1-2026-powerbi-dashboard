@@ -1,143 +1,39 @@
-# 🗂️ Job Application Tracker
+# F1 2026 Season Dashboard
 
-A full-stack web application to track job applications with an AI-powered job description analyzer.
+An interactive Power BI dashboard tracking the 2026 Formula 1 season — driver standings, constructor championship battle, race-by-race results, and circuit locations.
 
----
+## Data Source
 
-## 🚀 Features
+Pulled from the [Jolpica-F1 API](http://api.jolpi.ca/ergast/f1/) (the community-maintained successor to the deprecated Ergast API), using paginated requests to retrieve full season results.
 
-- **Authentication** — Secure login and signup powered by Supabase
-- **Application Management** — Add, edit, and delete job applications
-- **Kanban Board** — Visualize applications across stages: Applied → Interview → Offer → Rejected
-- **AI Analyzer** — Paste a job description and get instant AI-powered insights using Groq (LLaMA 3.3)
-- **Clean UI** — Responsive design built with Tailwind CSS
+## Features
 
----
+- **4 dashboard pages**: Overview, Drivers, Constructors, Race Calendar
+- **KPI cards** on the Overview page: total points awarded, total drivers, total teams, current championship leader
+- **Cumulative points tracking** (running totals) for both the driver and constructor championships, filtered to the top performers for readability
+- **Race-by-race results table** with chronological sorting
+- **Interactive slicer** to filter the dashboard by race
+- **Circuit map** showing race locations by latitude/longitude
+- **Race calendar** with completed/upcoming status per race
 
-## 🛠️ Tech Stack
+## Screenshots
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React (Vite) |
-| Styling | Tailwind CSS |
-| Backend | Node.js + Express |
-| Database & Auth | Supabase (PostgreSQL) |
-| AI | Groq API (LLaMA 3.3 70B) |
+![Overview](screenshots/page1-overview.png)
+![Drivers](screenshots/page2-drivers.png)
+![Constructors](screenshots/page3-constructors.png)
+![Race Calendar](screenshots/page4-calendar.png)
 
----
+## Technical Notes
 
-## 📁 Project Structure
+- **API pagination**: Jolpica-F1 caps each request at 100 rows regardless of the requested limit. Solved by combining 6 offset-based queries (`offset=0,100,200,300,400,500`) and appending them into a single table, covering a full season's worth of results (~530 rows max).
+- **JSON flattening**: used Power Query to expand and flatten deeply nested JSON (race → results → driver/constructor/lap data) into a clean relational table.
+- **DAX measures**: built a dynamic measure to surface the current points leader as a live KPI card.
+- **Data currency**: the dashboard reflects whatever data Jolpica-F1 has published at the time of refresh. Community-run APIs like this can lag official race results by up to 24–48 hours after a race weekend.
+- **Refresh**: designed to support Power BI Service scheduled auto-refresh; currently refreshed manually in Power BI Desktop due to a regional account verification issue with Power BI Service sign-up. The pagination architecture is already refresh-ready once that's resolved.
 
-```
-job-tracker/
-├── src/
-│   ├── pages/
-│   │   ├── Login.jsx
-│   │   └── Dashboard.jsx
-│   ├── supabaseClient.js
-│   ├── App.jsx
-│   └── main.jsx
-├── backend/
-│   ├── index.js
-│   └── package.json
-└── README.md
-```
+## Built With
 
----
-
-## ⚙️ Getting Started
-
-### Prerequisites
-- Node.js v18+
-- A [Supabase](https://supabase.com) account
-- A [Groq](https://console.groq.com) API key
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/sarafay2003/job-tracker.git
-cd job-tracker
-```
-
-### 2. Setup Frontend
-
-```bash
-npm install
-```
-
-Create a `.env` file in the root folder:
-
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-### 3. Setup Backend
-
-```bash
-cd backend
-npm install
-```
-
-Create a `.env` file in the backend folder:
-
-```
-GROQ_API_KEY=your_groq_api_key
-```
-
-### 4. Setup Supabase Database
-
-Create a table called `applications` with these columns:
-
-| Column | Type |
-|--------|------|
-| id | uuid (primary key) |
-| created_at | timestamptz |
-| company | text |
-| role | text |
-| status | text |
-| date_applied | date |
-| link | text |
-| notes | text |
-
-### 5. Run the App
-
-Start the backend:
-```bash
-cd backend
-node index.js
-```
-
-Start the frontend (in a new terminal):
-```bash
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
----
-
-## 📸 Screenshots
-
-### Login Page
-> Clean and minimal login/signup screen
-
-### Dashboard & Kanban Board
-> Track all applications across stages in a visual Kanban layout
-
-### AI Job Analyzer
-> Paste any job description to get skill requirements, experience level, and resume tips
-
----
-
-## 👤 Author
-
-**Syed Abdul Rafay**  
-Software Engineering Graduate — Bahria University Karachi  
-[GitHub](https://github.com/sarafay2003)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+- Power BI Desktop
+- Power Query (M)
+- DAX
+- Jolpica-F1 REST API
