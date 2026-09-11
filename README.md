@@ -20,8 +20,7 @@ Pulled from the [Jolpica-F1 API](http://api.jolpi.ca/ergast/f1/) (the community-
 
 ![Overview](screenshots/page1-overview.png)
 ![Drivers](screenshots/page2-drivers.png)
-![Constructors](screenshots/page3-constructors.png)
-![Race Calendar](screenshots/page4-calendar.png)
+
 
 ## Technical Notes
 
